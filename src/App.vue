@@ -2,6 +2,7 @@
 import { computed, ref } from "vue";
 import { fetchStandingsData } from "./apiClient";
 import { League, type Team } from "./team/team";
+import Bracket from "./Bracket.vue";
 
 const teams = ref<Team[]>([]);
 
@@ -39,6 +40,8 @@ const displayTeam = (team: Team) =>
 
     <h2>American League</h2>
 
+    <Bracket :teams="alStandings" />
+
     <ol>
         <li v-for="team in alStandings">
             {{ displayTeam(team) }}
@@ -46,6 +49,9 @@ const displayTeam = (team: Team) =>
     </ol>
 
     <h2>National League</h2>
+
+    <Bracket :teams="nlStandings" />
+
     <ol>
         <li v-for="team in nlStandings">
             {{ displayTeam(team) }}
