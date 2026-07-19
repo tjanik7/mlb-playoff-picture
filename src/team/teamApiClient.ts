@@ -15,6 +15,7 @@ const toTeam = (resTeam: ResponseTeam): Team => ({
     abbreviation: resTeam.abbreviation,
     wins: 0,
     losses: 0,
+    winPct: 0.0,
 });
 
 export const fetchTeam = async (url: string): Promise<Team> => {

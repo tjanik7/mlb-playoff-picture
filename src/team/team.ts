@@ -4,4 +4,5 @@ export interface Team {
     abbreviation: string;
     wins: number;
     losses: number;
+    winPct: number;
 }
