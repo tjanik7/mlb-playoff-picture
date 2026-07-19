@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import axios from "axios";
-import type { Team } from "./team";
+import type { Team } from "./team/team";
 
 interface ApiTeam {
     id: number;
