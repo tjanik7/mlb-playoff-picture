@@ -1,12 +1,19 @@
 import axios from "axios";
-import type { Team } from "./team";
+import { idToLeague, League, type Team } from "./team";
 
 const API_BASE_URL = "https://statsapi.mlb.com";
+
+interface ResponseLeague {
+    id: number;
+    link: string;
+    name: string;
+}
 
 interface ResponseTeam {
     franchiseName: string;
     teamName: string;
     abbreviation: string;
+    league: ResponseLeague;
 }
 
 const toTeam = (resTeam: ResponseTeam): Team => ({
@@ -16,6 +23,7 @@ const toTeam = (resTeam: ResponseTeam): Team => ({
     wins: 0,
     losses: 0,
     winPct: 0.0,
+    league: idToLeague(resTeam.league.id),
 });
 
 export const fetchTeam = async (url: string): Promise<Team> => {
