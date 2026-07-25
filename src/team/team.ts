@@ -29,6 +29,7 @@ export interface Team {
     winPct: number;
     league: League;
     division: Division;
+    isDivisionLeader?: boolean;
 }
 
 // Display Funcs

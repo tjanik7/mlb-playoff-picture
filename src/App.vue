@@ -18,12 +18,14 @@ const teams = ref<Team[]>([]);
 
 const teamCompare = (a: Team, b: Team) => b.winPct - a.winPct;
 
-const getLeagueStandings = (league: League) =>
-    teams.value.filter((t) => t.league === league).sort(teamCompare);
+const getWcStandings = (league: League) =>
+    teams.value
+        .filter((t) => t.league === league && !t.isDivisionLeader)
+        .sort(teamCompare);
 
-const alStandings = computed<Team[]>(() => getLeagueStandings(League.American));
+const alWcStandings = computed<Team[]>(() => getWcStandings(League.American));
 
-const nlStandings = computed<Team[]>(() => getLeagueStandings(League.National));
+const nlWcStandings = computed<Team[]>(() => getWcStandings(League.National));
 
 const setDivisionStandings = () => {
     const standings: DivisionStandings = {};
@@ -41,16 +43,46 @@ const setDivisionStandings = () => {
         }
     }
 
+    // Sort divisions by win pct
     for (let key in standings) {
         const div = standings[key];
 
         if (div) {
             div.teams.sort(teamCompare);
+
+            // Mark division leaders
+            const divLeader = div.teams[0];
+
+            if (divLeader) {
+                divLeader.isDivisionLeader = true;
+            }
         }
     }
 
     divisionStandings.value = standings;
 };
+
+const alDivLeaders = computed(() =>
+    teams.value
+        .filter((t) => t.league === League.American && t.isDivisionLeader)
+        .sort(teamCompare),
+);
+
+const nlDivLeaders = computed(() =>
+    teams.value
+        .filter((t) => t.league === League.National && t.isDivisionLeader)
+        .sort(teamCompare),
+);
+
+const alPlayoffPicture = computed(() => [
+    ...alDivLeaders.value,
+    ...alWcStandings.value,
+]);
+
+const nlPlayoffPicture = computed(() => [
+    ...nlDivLeaders.value,
+    ...nlWcStandings.value,
+]);
 
 const loadData = async () => {
     teams.value = await fetchStandingsData();
@@ -66,20 +98,20 @@ loadData();
 
     <h2>American League</h2>
 
-    <Bracket :teams="alStandings" />
+    <Bracket :teams="alPlayoffPicture" />
+
+    <Bracket :teams="nlPlayoffPicture" />
 
     <ol>
-        <li v-for="team in alStandings">
+        <li v-for="team in alWcStandings">
             {{ displayTeam(team) }}
         </li>
     </ol>
 
     <h2>National League</h2>
 
-    <Bracket :teams="nlStandings" />
-
     <ol>
-        <li v-for="team in nlStandings">
+        <li v-for="team in nlWcStandings">
             {{ displayTeam(team) }}
         </li>
     </ol>
