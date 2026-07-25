@@ -9,11 +9,18 @@ interface ResponseLeague {
     name: string;
 }
 
+interface ResponseDivision {
+    id: number;
+    link: string;
+    name: string;
+}
+
 interface ResponseTeam {
     franchiseName: string;
     teamName: string;
     abbreviation: string;
     league: ResponseLeague;
+    division: ResponseDivision;
 }
 
 const toTeam = (resTeam: ResponseTeam): Team => ({
@@ -24,6 +31,10 @@ const toTeam = (resTeam: ResponseTeam): Team => ({
     losses: 0,
     winPct: 0.0,
     league: idToLeague(resTeam.league.id),
+    division: {
+        id: resTeam.division.id,
+        name: resTeam.division.name,
+    },
 });
 
 export const fetchTeam = async (url: string): Promise<Team> => {
