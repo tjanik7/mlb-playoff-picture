@@ -4,6 +4,7 @@ import { fetchStandingsData } from "./apiClient";
 import { displayTeam, League, type Division, type Team } from "./team/team";
 import Bracket from "./Bracket.vue";
 import StandingsEntry from "./StandingsEntry.vue";
+import StyledBracket from "./StyledBracket.vue";
 
 interface DivisionStandings {
     [key: number]: {
@@ -94,7 +95,9 @@ loadData();
 </script>
 
 <template>
-    <h1>MLB Playoff Picture</h1>
+    <StyledBracket />
+
+    <!-- <h1>MLB Playoff Picture</h1>
 
     <h2>American League</h2>
 
@@ -118,7 +121,7 @@ loadData();
 
     <div v-for="div in divisionStandings">
         <StandingsEntry :division="div.division" :teams="div.teams" />
-    </div>
+    </div> -->
 </template>
 
 <style scoped></style>
