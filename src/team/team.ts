@@ -15,6 +15,11 @@ export const idToLeague = (leagueId: number) => {
     throw new Error(`Invalid league ID: ${leagueId}`);
 };
 
+export interface Division {
+    id: number;
+    name: string;
+}
+
 export interface Team {
     location: string; // Location component of a team's name
     name: string; // Actual team name (e.g. Cubs, Rays)
@@ -23,4 +28,5 @@ export interface Team {
     losses: number;
     winPct: number;
     league: League;
+    division: Division;
 }

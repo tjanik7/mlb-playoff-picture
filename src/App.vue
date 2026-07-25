@@ -1,22 +1,60 @@
 <script setup lang="ts">
 import { computed, ref } from "vue";
 import { fetchStandingsData } from "./apiClient";
-import { League, type Team } from "./team/team";
+import { League, type Division, type Team } from "./team/team";
 import Bracket from "./Bracket.vue";
+
+interface DivisionStandings {
+    [key: number]: {
+        division: Division;
+        teams: Team[];
+    };
+}
+
+const divisionStandings = ref<DivisionStandings>();
 
 const teams = ref<Team[]>([]);
 
+const teamCompare = (a: Team, b: Team) => b.winPct - a.winPct;
+
 const getLeagueStandings = (league: League) =>
-    teams.value
-        .filter((t) => t.league === league)
-        .sort((a, b) => b.winPct - a.winPct);
+    teams.value.filter((t) => t.league === league).sort(teamCompare);
 
 const alStandings = computed<Team[]>(() => getLeagueStandings(League.American));
 
 const nlStandings = computed<Team[]>(() => getLeagueStandings(League.National));
 
+const setDivisionStandings = () => {
+    const standings: DivisionStandings = {};
+
+    for (const team of teams.value) {
+        const divId = team.division.id;
+
+        if (divId in standings) {
+            standings[divId]?.teams.push(team);
+        } else {
+            standings[divId] = {
+                division: team.division,
+                teams: [team],
+            };
+        }
+    }
+
+    for (let key in standings) {
+        const div = standings[key];
+
+        if (div) {
+            div.teams.sort(teamCompare);
+        }
+    }
+
+    divisionStandings.value = standings;
+};
+
 const loadData = async () => {
     teams.value = await fetchStandingsData();
+
+    setDivisionStandings();
 };
 
 loadData();
