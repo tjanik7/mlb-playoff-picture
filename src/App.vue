@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { computed, ref } from "vue";
 import { fetchStandingsData } from "./apiClient";
-import { League, type Division, type Team } from "./team/team";
+import { displayTeam, League, type Division, type Team } from "./team/team";
 import Bracket from "./Bracket.vue";
+import StandingsEntry from "./StandingsEntry.vue";
 
 interface DivisionStandings {
     [key: number]: {
@@ -58,19 +59,6 @@ const loadData = async () => {
 };
 
 loadData();
-
-const displayTeam = (team: Team) =>
-    team.location +
-    " " +
-    team.name +
-    " (" +
-    team.wins +
-    "-" +
-    team.losses +
-    ")" +
-    " [" +
-    team.winPct.toFixed(3).slice(1) +
-    "]";
 </script>
 
 <template>
@@ -95,6 +83,10 @@ const displayTeam = (team: Team) =>
             {{ displayTeam(team) }}
         </li>
     </ol>
+
+    <div v-for="div in divisionStandings">
+        <StandingsEntry :division="div.division" :teams="div.teams" />
+    </div>
 </template>
 
 <style scoped></style>

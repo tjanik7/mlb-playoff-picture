@@ -30,3 +30,18 @@ export interface Team {
     league: League;
     division: Division;
 }
+
+// Display Funcs
+
+export const displayTeam = (team: Team) =>
+    team.location +
+    " " +
+    team.name +
+    " (" +
+    team.wins +
+    "-" +
+    team.losses +
+    ")" +
+    " [" +
+    team.winPct.toFixed(3).slice(1) +
+    "]";
