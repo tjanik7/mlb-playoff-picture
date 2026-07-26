@@ -1,14 +1,14 @@
 <script setup lang="ts"></script>
 
 <template>
-    <div class="flex-col">
+    <div class="container">
         <div class="team">Cubs</div>
         <div class="team bottom">Brewers</div>
     </div>
 </template>
 
 <style scoped lang="css">
-.flex-col {
+.container {
     background-color: lightcoral;
     display: grid;
     grid-template-columns: min-content;
