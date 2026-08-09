@@ -32,6 +32,8 @@ export interface Team {
     isDivisionLeader?: boolean;
 }
 
+export const teamCompare = (a: Team, b: Team) => b.winPct - a.winPct;
+
 // Display Funcs
 
 export const displayTeam = (team: Team) =>
