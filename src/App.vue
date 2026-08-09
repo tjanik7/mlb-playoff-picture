@@ -96,19 +96,19 @@ loadData();
 <template>
     <h1>MLB Playoff Picture</h1>
 
-    <h2>American League</h2>
-
+    <h2>American League Playoff Picture</h2>
     <Bracket :teams="alPlayoffPicture" />
 
+    <h2>National League Playoff Picture</h2>
     <Bracket :teams="nlPlayoffPicture" />
+
+    <h2>############</h2>
 
     <ol>
         <li v-for="team in alWcStandings">
             {{ displayTeam(team) }}
         </li>
     </ol>
-
-    <h2>National League</h2>
 
     <ol>
         <li v-for="team in nlWcStandings">
