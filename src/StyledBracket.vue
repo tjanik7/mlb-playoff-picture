@@ -9,9 +9,11 @@
             <div class="flex-item bottom">Cardinals</div>
         </div>
         <div class="col-container">
+            <div class="flex-item bottom invisible no-border"></div>
             <div class="flex-item">CHC</div>
-            <div class="flex-item bottom invisible">.</div>
+            <div class="flex-item bottom invisible no-bottom"></div>
             <div class="flex-item bottom">SD</div>
+            <div class="flex-item bottom invisible no-border"></div>
         </div>
     </div>
 </template>
@@ -46,6 +48,14 @@
 }
 
 .invisible {
+    flex-grow: 1;
+}
+
+.no-border {
+    border: none;
+}
+
+.no-bottom {
     border-bottom: none;
 }
 </style>
