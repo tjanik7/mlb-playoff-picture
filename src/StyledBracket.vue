@@ -2,18 +2,20 @@
 
 <template>
     <div class="row-container">
-        <div class="col-container">
+        <div class="col-container r1">
             <div class="flex-item">Cubs</div>
             <div class="flex-item bottom">Dodgers</div>
             <div class="flex-item">Padres</div>
             <div class="flex-item bottom">Cardinals</div>
         </div>
-        <div class="col-container">
-            <div class="flex-item bottom invisible no-border"></div>
-            <div class="flex-item">CHC</div>
-            <div class="flex-item bottom invisible no-bottom"></div>
-            <div class="flex-item bottom">SD</div>
-            <div class="flex-item bottom invisible no-border"></div>
+
+        <div class="col-container r2">
+            <div class="flex-item">Cubs</div>
+            <div class="flex-item bottom">Padres</div>
+        </div>
+
+        <div class="col-container r3">
+            <div class="flex-item">Cubs</div>
         </div>
     </div>
 </template>
@@ -35,27 +37,32 @@
     justify-content: center;
 }
 
+.bottom {
+    border-right: 3px solid black;
+}
+
 .flex-item {
     background-color: coral;
     width: 100%;
     border-bottom: 3px solid black;
     box-sizing: border-box;
-    /* flex-grow: 1; */
+
+    /* Align text to bottom of div */
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
 }
 
-.bottom {
-    border-right: 3px solid black;
+.r1 > .flex-item {
+    height: 2em;
 }
 
-.invisible {
-    flex-grow: 1;
+.r2 > .bottom {
+    height: 4em;
+    margin-bottom: 1em;
 }
 
-.no-border {
-    border: none;
-}
-
-.no-bottom {
-    border-bottom: none;
+.r2 {
+    justify-content: flex-end;
 }
 </style>
