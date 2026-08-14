@@ -1,19 +1,27 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { computed, ref } from "vue";
 
 const props = defineProps<{
-    height: string;
+    height: number; // in "em"
     roadTeam: string;
     homeTeam: string;
+    bottomOffset?: number; // in "em"
 }>();
 
-// TODO: Need to be able to set bottom padding dynamically
+const heightStr = computed(() => String(props.height) + "em");
+const h2Str = computed(() => String(props.height * 2) + "em");
+
+const offset = computed(() => {
+    const asNum = props.bottomOffset ?? 0;
+    return String(asNum) + "em";
+});
 </script>
 
 <template>
     <div class="col-container">
         <div class="flex-item">{{ props.roadTeam }}</div>
         <div class="flex-item home">{{ props.homeTeam }}</div>
+        <div class="spacer"></div>
     </div>
 </template>
 
@@ -22,16 +30,14 @@ const props = defineProps<{
     display: flex;
     flex-direction: column;
     width: 100%;
-    background-color: lightblue;
+    justify-content: flex-end;
 
-    /* height: v-bind("props.height * 2"); */
+    height: v-bind(h2Str);
 }
 
 .flex-item {
     box-sizing: border-box;
-    height: v-bind("props.height");
 
-    background-color: coral;
     width: 100%;
     border-bottom: 3px solid black;
 
@@ -39,10 +45,16 @@ const props = defineProps<{
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
+
+    padding: 0 4px;
 }
 
 .home {
     border-right: 3px solid black;
-    /* margin-bottom: 4px; */
+    height: v-bind(heightStr);
+}
+
+.spacer {
+    height: v-bind(offset);
 }
 </style>

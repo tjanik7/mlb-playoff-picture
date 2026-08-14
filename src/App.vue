@@ -1,31 +1,31 @@
 <script setup lang="ts">
-import StyledBracket from "./StyledBracket.vue";
-import SingleBracket from "./SingleBracket.vue";
+import SingleBracket from "./bracket/SingleBracket.vue";
+import SingleTeam from "./bracket/SingleTeam.vue";
+import SmartBracket from "./bracket/SmartBracket.vue";
 </script>
 
 <template>
-    <!-- <StyledBracket /> -->
+    <div class="flex-row">
+        <SmartBracket :num-teams="2" />
+    </div>
 
     <div class="flex-row">
         <div class="flex-col">
-            <SingleBracket
-                :height="'2em'"
-                road-team="Phillies"
-                home-team="Cubs"
-            />
-            <SingleBracket
-                :height="'2em'"
-                road-team="Giants"
-                home-team="Padres"
-            />
+            <SingleBracket road-team="Phillies" home-team="Cubs" :height="2" />
+            <SingleBracket road-team="Giants" home-team="Padres" :height="2" />
         </div>
 
         <div class="flex-col">
             <SingleBracket
-                :height="'4em'"
-                road-team="Cardinals"
-                home-team="Brewers"
+                road-team="Cubs"
+                home-team="Padres"
+                :height="4"
+                :bottom-offset="1"
             />
+        </div>
+
+        <div class="flex-col">
+            <SingleTeam team="Cubs" :bottom-offset="3" />
         </div>
     </div>
 </template>
@@ -38,5 +38,6 @@ import SingleBracket from "./SingleBracket.vue";
 .flex-col {
     display: flex;
     flex-direction: column;
+    justify-content: flex-end;
 }
 </style>
