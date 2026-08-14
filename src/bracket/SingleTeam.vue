@@ -2,7 +2,7 @@
 import { computed } from "vue";
 
 const props = defineProps<{
-    team: string;
+    team?: string;
     bottomOffset?: number;
 }>();
 
@@ -23,7 +23,7 @@ const offset = computed(() => {
 .col-container {
     display: flex;
     flex-direction: column;
-    width: 100%;
+    min-width: 4em;
     justify-content: flex-end;
 }
 

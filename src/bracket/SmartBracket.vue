@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { computed } from "vue";
+import SingleBracket from "./SingleBracket.vue";
+import SingleTeam from "./SingleTeam.vue";
 
 const props = defineProps<{
     numTeams: number;
@@ -20,12 +22,36 @@ const columns = computed(() => {
 
     return cols;
 });
+
+const getHeight = (colNumber: number) => 2 ** colNumber;
 </script>
 
 <template>
-    <div v-for="col in columns">
-        <div></div>
+    <div class="flex-row">
+        <div class="flex-col">
+            <SingleBracket
+                v-for="teamNum in numTeams"
+                :road-team="String(teamNum * 2 - 1)"
+                :home-team="String(teamNum * 2)"
+                :height="getHeight(1)"
+            />
+        </div>
+
+        <div class="flex-col">
+            <SingleBracket
+                v-for="n in Math.trunc(props.numTeams / 2)"
+                :height="getHeight(2)"
+                :bottom-offset="1"
+            />
+        </div>
+
+        <SingleTeam :bottom-offset="3" />
     </div>
 </template>
 
-<style scoped lang="css"></style>
+<style scoped lang="css">
+.flex-col {
+    display: flex;
+    flex-direction: column;
+}
+</style>

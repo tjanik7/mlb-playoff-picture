@@ -3,8 +3,8 @@ import { computed, ref } from "vue";
 
 const props = defineProps<{
     height: number; // in "em"
-    roadTeam: string;
-    homeTeam: string;
+    roadTeam?: string;
+    homeTeam?: string;
     bottomOffset?: number; // in "em"
 }>();
 
@@ -29,8 +29,8 @@ const offset = computed(() => {
 .col-container {
     display: flex;
     flex-direction: column;
-    width: 100%;
     justify-content: flex-end;
+    min-width: 4em;
 
     height: v-bind(h2Str);
 }

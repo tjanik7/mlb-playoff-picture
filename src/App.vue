@@ -5,29 +5,7 @@ import SmartBracket from "./bracket/SmartBracket.vue";
 </script>
 
 <template>
-    <div class="flex-row">
-        <SmartBracket :num-teams="2" />
-    </div>
-
-    <div class="flex-row">
-        <div class="flex-col">
-            <SingleBracket road-team="Phillies" home-team="Cubs" :height="2" />
-            <SingleBracket road-team="Giants" home-team="Padres" :height="2" />
-        </div>
-
-        <div class="flex-col">
-            <SingleBracket
-                road-team="Cubs"
-                home-team="Padres"
-                :height="4"
-                :bottom-offset="1"
-            />
-        </div>
-
-        <div class="flex-col">
-            <SingleTeam team="Cubs" :bottom-offset="3" />
-        </div>
-    </div>
+    <SmartBracket :num-teams="2" />
 </template>
 
 <style scoped>
