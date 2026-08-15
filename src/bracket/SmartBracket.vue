@@ -3,12 +3,14 @@ import { computed } from "vue";
 import SingleBracket from "./SingleBracket.vue";
 import SingleTeam from "./SingleTeam.vue";
 
+// TODO: Implement for bracket sizes that aren't powers of 2
+
 const props = defineProps<{
     numTeams: number;
 }>();
 
-// Member represents num teams in the given column
-const cols = computed(() => {
+// Number of teams in a given column
+const teamsInCol = computed(() => {
     const colArr = [];
     let n = props.numTeams;
 
@@ -20,24 +22,21 @@ const cols = computed(() => {
     return colArr;
 });
 
-// Number of SingleBrackets needed in a given column
-const getNumBrackets = (col: number) => Math.trunc(cols.value[col - 1]! / 2);
+// Number of SingleBracket components needed in a given column
+const getNumBrackets = (col: number) =>
+    Math.trunc(teamsInCol.value[col - 1]! / 2);
 
 // Calc number of columns needed (via number of teams)
-// TODO: make computed?
-const getNumCols = (numTeams: number) =>
-    Math.ceil(Math.log(numTeams) / Math.log(2) + 1);
+const numCols = computed(() =>
+    Math.ceil(Math.log(props.numTeams) / Math.log(2) + 1),
+);
 
 const getHeight = (colNumber: number) => 2 ** colNumber;
 
 const offsets = computed(() => {
     const res = [0];
 
-    const numCols = getNumCols(props.numTeams);
-    console.log(numCols);
-    console.log("hi");
-
-    for (let i = 1; i < numCols; i++) {
+    for (let i = 1; i < numCols.value; i++) {
         const prevHeight = getHeight(i);
         res.push(res[i - 1]! + Math.trunc(prevHeight / 2));
     }
@@ -46,7 +45,7 @@ const offsets = computed(() => {
 });
 
 console.log(`Generating ${props.numTeams} team bracket`);
-console.log(`Requires ${getNumCols(props.numTeams)} columns`);
+console.log(`Requires ${numCols.value} columns`);
 
 console.log(offsets.value);
 </script>
@@ -55,14 +54,14 @@ console.log(offsets.value);
     <div class="flex-row">
         <div class="flex-col">
             <SingleBracket
-                v-for="teamNum in Math.trunc(cols[0]! / 2)"
+                v-for="teamNum in Math.trunc(teamsInCol[0]! / 2)"
                 :road-team="String(teamNum * 2 - 1)"
                 :home-team="String(teamNum * 2)"
                 :height="getHeight(1)"
             />
         </div>
 
-        <div v-for="colNum in getNumCols(props.numTeams) - 2" class="flex-col">
+        <div v-for="colNum in numCols - 2" class="flex-col">
             <SingleBracket
                 v-for="j in getNumBrackets(colNum + 1)"
                 :height="getHeight(colNum + 1)"
