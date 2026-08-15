@@ -1,11 +1,9 @@
 <script setup lang="ts">
-import SingleBracket from "./bracket/SingleBracket.vue";
-import SingleTeam from "./bracket/SingleTeam.vue";
 import SmartBracket from "./bracket/SmartBracket.vue";
 </script>
 
 <template>
-    <SmartBracket :num-teams="2" />
+    <SmartBracket :num-teams="8" />
 </template>
 
 <style scoped>
