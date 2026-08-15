@@ -2,12 +2,25 @@
 import { computed } from "vue";
 import SingleBracket from "./SingleBracket.vue";
 import SingleTeam from "./SingleTeam.vue";
+import { run } from "./seeds.ts";
 
 // TODO: Implement for bracket sizes that aren't powers of 2
 
 const props = defineProps<{
     numTeams: number;
 }>();
+
+const seeds = computed(() => {
+    const res = [];
+    const n = props.numTeams;
+
+    for (let i = 0; i < Math.trunc(n / 2); i++) {
+        res.push(n - i);
+        res.push(i + 1);
+    }
+
+    return res;
+});
 
 // Number of teams in a given column
 const teamsInCol = computed(() => {
@@ -44,10 +57,12 @@ const offsets = computed(() => {
     return res;
 });
 
-console.log(`Generating ${props.numTeams} team bracket`);
-console.log(`Requires ${numCols.value} columns`);
+// console.log(`Generating ${props.numTeams} team bracket`);
+// console.log(`Requires ${numCols.value} columns`);
 
-console.log(offsets.value);
+// console.log(offsets.value);
+
+run();
 </script>
 
 <template>
@@ -55,8 +70,8 @@ console.log(offsets.value);
         <div class="flex-col">
             <SingleBracket
                 v-for="teamNum in Math.trunc(teamsInCol[0]! / 2)"
-                :road-team="String(teamNum * 2 - 1)"
-                :home-team="String(teamNum * 2)"
+                :road-team="String(seeds[(teamNum - 1) * 2])"
+                :home-team="String(seeds[(teamNum - 1) * 2 + 1])"
                 :height="getHeight(1)"
             />
         </div>
