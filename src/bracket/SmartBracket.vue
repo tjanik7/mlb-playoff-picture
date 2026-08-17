@@ -4,7 +4,9 @@ import SingleBracket from "./SingleBracket.vue";
 import SingleTeam from "./SingleTeam.vue";
 import { getSeedArr, run } from "./seeds.ts";
 
-// TODO: Implement for bracket sizes that aren't powers of 2
+// TODO next: Shift to using node/tree structure here so we can easily iterate
+// through each round
+// (Will prob need to produce an arr for each round after building the tree)
 
 const props = defineProps<{
     numTeams: number;
@@ -65,7 +67,7 @@ interface Matchup {
 }
 const r1Matchups = computed(() => {
     const arr = seedArr.value;
-    const matchups = [];
+    const matchups: (Matchup | "bye")[] = [];
 
     for (let i = 0; i < props.numTeams; i += 2) {
         const road = arr[i];
@@ -100,12 +102,15 @@ console.log(r1Matchups.value);
 <template>
     <div class="flex-row">
         <div class="flex-col">
-            <SingleBracket
-                v-for="teamNum in Math.trunc(teamsInCol[0]! / 2)"
-                :road-team="String(seeds[(teamNum - 1) * 2])"
-                :home-team="String(seeds[(teamNum - 1) * 2 + 1])"
-                :height="getHeight(1)"
-            />
+            <template v-for="matchup in r1Matchups">
+                <template v-if="matchup !== 'bye'">
+                    <SingleBracket
+                        :road-team="String(matchup.road)"
+                        :home-team="String(matchup.home)"
+                        :height="getHeight(1)"
+                    />
+                </template>
+            </template>
         </div>
 
         <div v-for="colNum in numCols - 2" class="flex-col">
