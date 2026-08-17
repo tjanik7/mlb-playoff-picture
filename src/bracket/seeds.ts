@@ -49,7 +49,7 @@ const rec = (
     return node;
 };
 
-const getSeedArr = (numTeams: number) => {
+export const getSeedArr = (numTeams: number) => {
     const seedArr: number[] = [];
     rec(1, 0, calcNumRounds(numTeams), seedArr);
 

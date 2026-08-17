@@ -2,7 +2,7 @@
 import { computed } from "vue";
 import SingleBracket from "./SingleBracket.vue";
 import SingleTeam from "./SingleTeam.vue";
-import { run } from "./seeds.ts";
+import { getSeedArr, run } from "./seeds.ts";
 
 // TODO: Implement for bracket sizes that aren't powers of 2
 
@@ -57,12 +57,44 @@ const offsets = computed(() => {
     return res;
 });
 
-// console.log(`Generating ${props.numTeams} team bracket`);
-// console.log(`Requires ${numCols.value} columns`);
+const seedArr = computed(() => getSeedArr(props.numTeams));
 
-// console.log(offsets.value);
+interface Matchup {
+    road: number;
+    home: number;
+}
+const r1Matchups = computed(() => {
+    const arr = seedArr.value;
+    const matchups = [];
 
-run();
+    for (let i = 0; i < props.numTeams; i += 2) {
+        const road = arr[i];
+        const home = arr[i + 1];
+
+        if (
+            road === "bye" ||
+            home === "bye" ||
+            road === undefined ||
+            home === undefined
+        ) {
+            matchups.push("bye");
+        } else {
+            const matchup: Matchup = {
+                road: road,
+                home: home,
+            };
+
+            matchups.push(matchup);
+        }
+    }
+
+    return matchups;
+});
+
+console.log("seedArr is");
+console.log(seedArr.value);
+
+console.log(r1Matchups.value);
 </script>
 
 <template>
