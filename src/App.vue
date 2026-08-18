@@ -10,10 +10,12 @@ const genTeams = (n: number) => {
 
     return teams;
 };
+
+const t = ["Cubs", "Brewers", "Dodgers", "Mets"];
 </script>
 
 <template>
-    <SmartBracket :teams="genTeams(6)" />
+    <SmartBracket :teams="t" />
 </template>
 
 <style scoped>

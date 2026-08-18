@@ -15,9 +15,9 @@ const subByes = (rounds: number[][], numTeams: number) => {
     return res;
 };
 
-const calcRoundsIter = (numTeams: number) => {
-    const numRounds = calcMaxDepth(numTeams);
-    const rounds = [[1]]; // Prepopulate 1st round
+const calcRoundsIter = (teams: string[]) => {
+    const numRounds = calcMaxDepth(teams.length);
+    const rounds = [[1]]; // Prepopulate championship
 
     for (let r = 1; r <= numRounds; r++) {
         const prevRound = rounds.at(-1);
@@ -41,9 +41,9 @@ const calcRoundsIter = (numTeams: number) => {
     return rounds;
 };
 
-export const getBracket = (numTeams: number) => {
-    const b = calcRoundsIter(numTeams);
-    return subByes(b, numTeams);
+export const getBracket = (teams: string[]) => {
+    const b = calcRoundsIter(teams);
+    return subByes(b, teams.length);
 };
 
 interface Matchup {

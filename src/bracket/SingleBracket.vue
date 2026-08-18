@@ -2,9 +2,12 @@
 import { computed } from "vue";
 
 const props = defineProps<{
+    roadSeed?: number;
+    roadName?: string;
+    homeSeed?: number;
+    homeName?: string;
+
     height: number; // in "em"
-    roadTeam?: string;
-    homeTeam?: string;
     bottomOffset?: number; // in "em"
 }>();
 
@@ -15,15 +18,30 @@ const offset = computed(() => {
     const asNum = props.bottomOffset ?? 0;
     return String(asNum) + "em";
 });
+
+const formatTeam = (seed: number | undefined, team: string | undefined) => {
+    if (seed === -1) {
+        return "";
+    }
+
+    if (team === undefined) {
+        return String(seed);
+    }
+
+    return seed + ". " + team;
+};
+
+const roadFmt = computed(() => formatTeam(props.roadSeed, props.roadName));
+const homeFmt = computed(() => formatTeam(props.homeSeed, props.homeName));
 </script>
 
 <template>
     <div class="col-container">
         <div class="flex-item">
-            {{ props.roadTeam === "-1" ? "" : props.roadTeam }}
+            {{ roadFmt }}
         </div>
         <div class="flex-item home">
-            {{ props.homeTeam === "-1" ? "" : props.homeTeam }}
+            {{ homeFmt }}
         </div>
         <div class="spacer"></div>
     </div>

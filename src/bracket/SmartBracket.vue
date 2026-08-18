@@ -9,12 +9,10 @@ const props = defineProps<{
     teams: string[];
 }>();
 
-const numTeams = computed(() => props.teams.length);
-
 const getHeight = (colIdx: number) => 2 ** (colIdx + 1);
 
 const cols = computed(() => {
-    const bracket = getBracket(numTeams.value);
+    const bracket = getBracket(props.teams);
 
     const sliced = bracket.slice(1);
     const reversed = sliced.reverse();
@@ -41,8 +39,10 @@ const offsets = computed(() => {
             <template v-for="matchup in col">
                 <template v-if="matchup !== 'bye'">
                     <SingleBracket
-                        :road-team="String(matchup.road)"
-                        :home-team="String(matchup.home)"
+                        :roadSeed="matchup.road"
+                        :road-name="teams[matchup.road - 1]"
+                        :homeSeed="matchup.home"
+                        :home-name="teams[matchup.home - 1]"
                         :height="getHeight(idx)"
                         :bottom-offset="offsets[idx]"
                     />
