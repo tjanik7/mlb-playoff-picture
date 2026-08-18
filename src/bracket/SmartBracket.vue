@@ -2,125 +2,53 @@
 import { computed } from "vue";
 import SingleBracket from "./SingleBracket.vue";
 import SingleTeam from "./SingleTeam.vue";
-import { getSeedArr, run } from "./seeds.ts";
-
-// TODO next: Shift to using node/tree structure here so we can easily iterate
-// through each round
-// (Will prob need to produce an arr for each round after building the tree)
+import { getBracket, run, toBracketNodes } from "./seeds.ts";
+import Bye from "./Bye.vue";
 
 const props = defineProps<{
     numTeams: number;
 }>();
 
-const seeds = computed(() => {
-    const res = [];
-    const n = props.numTeams;
-
-    for (let i = 0; i < Math.trunc(n / 2); i++) {
-        res.push(n - i);
-        res.push(i + 1);
-    }
-
-    return res;
-});
-
-// Number of teams in a given column
-const teamsInCol = computed(() => {
-    const colArr = [];
-    let n = props.numTeams;
-
-    while (n > 0) {
-        colArr.push(n);
-        n = Math.trunc(n / 2);
-    }
-
-    return colArr;
-});
-
-// Number of SingleBracket components needed in a given column
-const getNumBrackets = (col: number) =>
-    Math.trunc(teamsInCol.value[col - 1]! / 2);
-
-// Calc number of columns needed (via number of teams)
-const numCols = computed(() =>
-    Math.ceil(Math.log(props.numTeams) / Math.log(2) + 1),
-);
-
 const getHeight = (colNumber: number) => 2 ** colNumber;
+
+const cols = computed(() => {
+    const bracket = getBracket(props.numTeams);
+
+    const sliced = bracket.slice(1);
+    const reversed = sliced.reverse();
+
+    return reversed.map((col) => toBracketNodes(col));
+});
 
 const offsets = computed(() => {
     const res = [0];
 
-    for (let i = 1; i < numCols.value; i++) {
+    for (let i = 1; i < cols.value.length + 1; i++) {
         const prevHeight = getHeight(i);
         res.push(res[i - 1]! + Math.trunc(prevHeight / 2));
     }
 
     return res;
 });
-
-const seedArr = computed(() => getSeedArr(props.numTeams));
-
-interface Matchup {
-    road: number;
-    home: number;
-}
-const r1Matchups = computed(() => {
-    const arr = seedArr.value;
-    const matchups: (Matchup | "bye")[] = [];
-
-    for (let i = 0; i < props.numTeams; i += 2) {
-        const road = arr[i];
-        const home = arr[i + 1];
-
-        if (
-            road === "bye" ||
-            home === "bye" ||
-            road === undefined ||
-            home === undefined
-        ) {
-            matchups.push("bye");
-        } else {
-            const matchup: Matchup = {
-                road: road,
-                home: home,
-            };
-
-            matchups.push(matchup);
-        }
-    }
-
-    return matchups;
-});
-
-// console.log("seedArr is");
-// console.log(seedArr.value);
-
-// console.log(r1Matchups.value);
-
-run();
 </script>
 
 <template>
     <div class="flex-row">
-        <div class="flex-col">
-            <template v-for="matchup in r1Matchups">
+        <div v-for="(col, idx) in cols" class="flex-col">
+            <template v-for="matchup in col">
                 <template v-if="matchup !== 'bye'">
                     <SingleBracket
                         :road-team="String(matchup.road)"
                         :home-team="String(matchup.home)"
-                        :height="getHeight(1)"
+                        :height="getHeight(idx + 1)"
+                        :bottom-offset="offsets[idx]"
                     />
                 </template>
-            </template>
-        </div>
 
-        <div v-for="colNum in numCols - 2" class="flex-col">
-            <SingleBracket
-                v-for="j in getNumBrackets(colNum + 1)"
-                :height="getHeight(colNum + 1)"
-                :bottom-offset="offsets[colNum]"
-            />
+                <template v-else>
+                    <Bye :height="getHeight(idx + 1)" />
+                </template>
+            </template>
         </div>
 
         <SingleTeam :bottom-offset="offsets.at(-1)" />

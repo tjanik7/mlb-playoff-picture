@@ -3,7 +3,7 @@ import SmartBracket from "./bracket/SmartBracket.vue";
 </script>
 
 <template>
-    <SmartBracket :num-teams="3" />
+    <SmartBracket :num-teams="5" />
 </template>
 
 <style scoped>
