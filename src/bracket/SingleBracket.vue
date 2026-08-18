@@ -12,7 +12,7 @@ const props = defineProps<{
 }>();
 
 const heightStr = computed(() => String(props.height) + "em");
-const h2Str = computed(() => String(props.height * 2) + "em");
+const dblheightStr = computed(() => String(props.height * 2) + "em");
 
 const offset = computed(() => {
     const asNum = props.bottomOffset ?? 0;
@@ -54,7 +54,7 @@ const homeFmt = computed(() => formatTeam(props.homeSeed, props.homeName));
     justify-content: flex-end;
     min-width: 4em;
 
-    height: v-bind(h2Str);
+    height: v-bind(dblheightStr);
 }
 
 .flex-item {

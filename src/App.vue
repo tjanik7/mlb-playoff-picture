@@ -1,24 +1,27 @@
 <script setup lang="ts">
 import SmartBracket from "./bracket/SmartBracket.vue";
 
-const genTeams = (n: number) => {
-    const teams = [];
-
-    for (let i = 0; i < n; i++) {
-        teams.push(String(i + 1));
-    }
-
-    return teams;
-};
-
-const t = ["Cubs", "Brewers", "Dodgers", "Mets"];
+const t = [
+    "Cubs",
+    "Brewers",
+    "Dodgers",
+    "Mets",
+    "Cardinals",
+    "Padres",
+    "Reds",
+    "Rockies",
+    "Phillies",
+    "Marlins",
+    "Braves",
+    "Giants",
+];
 </script>
 
 <template>
     <SmartBracket :teams="t" />
 </template>
 
-<style scoped>
+<style lang="css" scoped>
 .flex-row {
     display: flex;
 }

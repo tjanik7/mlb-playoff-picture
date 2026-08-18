@@ -2,7 +2,7 @@
 import { computed } from "vue";
 import SingleBracket from "./SingleBracket.vue";
 import SingleTeam from "./SingleTeam.vue";
-import { getBracket, removeRepeatedNames, toBracketNodes } from "./seeds.ts";
+import { getBracket } from "./seeds.ts";
 import Bye from "./Bye.vue";
 
 const props = defineProps<{
@@ -11,20 +11,12 @@ const props = defineProps<{
 
 const getHeight = (colIdx: number) => 2 ** (colIdx + 1);
 
-const cols = computed(() => {
-    const bracket = getBracket(props.teams);
-
-    const sliced = bracket.slice(1);
-    const reversed = sliced.reverse();
-
-    const nodes = reversed.map((col) => toBracketNodes(col));
-    return removeRepeatedNames(nodes);
-});
+const columns = computed(() => getBracket(props.teams));
 
 const offsets = computed(() => {
     const res = [0];
 
-    for (let i = 1; i < cols.value.length + 1; i++) {
+    for (let i = 1; i < columns.value.length + 1; i++) {
         const prevHeight = getHeight(i - 1);
         res.push(res[i - 1]! + Math.trunc(prevHeight / 2));
     }
@@ -35,7 +27,7 @@ const offsets = computed(() => {
 
 <template>
     <div class="flex-row">
-        <div v-for="(col, idx) in cols" class="flex-col">
+        <div v-for="(col, idx) in columns" class="flex-col">
             <template v-for="matchup in col">
                 <template v-if="matchup !== 'bye'">
                     <SingleBracket

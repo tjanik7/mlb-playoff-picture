@@ -1,8 +1,8 @@
-const calcMaxDepth = (numTeams: number) =>
+const calcNumRounds = (numTeams: number) =>
     Math.ceil(Math.log(numTeams) / Math.log(2));
 
 // Seeds (in a matchup) must add to this number in a given round
-const getSeedSum = (depth: number) => 2 ** depth + 1;
+const calcSeedSum = (depth: number) => 2 ** depth + 1;
 
 const subByes = (rounds: number[][], numTeams: number) => {
     const res = [];
@@ -16,14 +16,14 @@ const subByes = (rounds: number[][], numTeams: number) => {
 };
 
 const calcRoundsIter = (teams: string[]) => {
-    const numRounds = calcMaxDepth(teams.length);
+    const numRounds = calcNumRounds(teams.length);
     const rounds = [[1]]; // Prepopulate championship
 
     for (let r = 1; r <= numRounds; r++) {
         const prevRound = rounds.at(-1);
         const round = [];
 
-        const seedSum = getSeedSum(r);
+        const seedSum = calcSeedSum(r);
 
         if (prevRound) {
             for (const seed of prevRound) {
@@ -41,9 +41,12 @@ const calcRoundsIter = (teams: string[]) => {
     return rounds;
 };
 
-export const getBracket = (teams: string[]) => {
+const getBracketOld = (teams: string[]) => {
     const b = calcRoundsIter(teams);
-    return subByes(b, teams.length);
+    const withByes = subByes(b, teams.length);
+
+    const sliced = withByes.slice(1);
+    return sliced.reverse();
 };
 
 interface Matchup {
@@ -52,8 +55,23 @@ interface Matchup {
 }
 
 type BracketNode = Matchup | "bye";
+type BracketColumn = BracketNode[];
 
-export const toBracketNodes = (teams: (number | "bye")[]) => {
+const toBracketNode = (
+    roadSeed: number | "bye",
+    homeSeed: number | "bye",
+): BracketNode => {
+    if (roadSeed === "bye" || homeSeed === "bye") {
+        return "bye";
+    }
+
+    return {
+        road: roadSeed,
+        home: homeSeed,
+    };
+};
+
+const toBracketNodes = (teams: (number | "bye")[]) => {
     const nodes: BracketNode[] = [];
 
     for (let i = 0; i < teams.length; i += 2) {
@@ -61,23 +79,17 @@ export const toBracketNodes = (teams: (number | "bye")[]) => {
         const home = teams[i + 1];
 
         if (road !== undefined && home !== undefined) {
-            if (road === "bye" || home === "bye") {
-                nodes.push("bye");
-            } else {
-                nodes.push({
-                    road: road,
-                    home: home,
-                });
-            }
+            const matchup = toBracketNode(road, home);
+            nodes.push(matchup);
         } else {
-            console.log(`undefined at ind ${i}`);
+            console.error(`undefined at ind ${i}`);
         }
     }
 
     return nodes;
 };
 
-export const removeRepeatedNames = (bracket: BracketNode[][]) => {
+const removeRepeatedNames = (bracket: BracketNode[][]) => {
     const seeds = new Set<number>();
     const newBracket: BracketNode[][] = [];
 
@@ -103,4 +115,11 @@ export const removeRepeatedNames = (bracket: BracketNode[][]) => {
     }
 
     return newBracket;
+};
+
+export const getBracket = (teams: string[]): BracketColumn[] => {
+    const bracket = getBracketOld(teams);
+
+    const nodes = bracket.map((col) => toBracketNodes(col));
+    return removeRepeatedNames(nodes);
 };
