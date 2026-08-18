@@ -2,7 +2,7 @@
 import { computed } from "vue";
 import SingleBracket from "./SingleBracket.vue";
 import SingleTeam from "./SingleTeam.vue";
-import { getBracket, run, toBracketNodes } from "./seeds.ts";
+import { getBracket, removeRepeatedNames, toBracketNodes } from "./seeds.ts";
 import Bye from "./Bye.vue";
 
 const props = defineProps<{
@@ -17,7 +17,8 @@ const cols = computed(() => {
     const sliced = bracket.slice(1);
     const reversed = sliced.reverse();
 
-    return reversed.map((col) => toBracketNodes(col));
+    const nodes = reversed.map((col) => toBracketNodes(col));
+    return removeRepeatedNames(nodes);
 });
 
 const offsets = computed(() => {

@@ -19,8 +19,12 @@ const offset = computed(() => {
 
 <template>
     <div class="col-container">
-        <div class="flex-item">{{ props.roadTeam }}</div>
-        <div class="flex-item home">{{ props.homeTeam }}</div>
+        <div class="flex-item">
+            {{ props.roadTeam === "-1" ? "" : props.roadTeam }}
+        </div>
+        <div class="flex-item home">
+            {{ props.homeTeam === "-1" ? "" : props.homeTeam }}
+        </div>
         <div class="spacer"></div>
     </div>
 </template>

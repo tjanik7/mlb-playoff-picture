@@ -77,7 +77,7 @@ export const toBracketNodes = (teams: (number | "bye")[]) => {
     return nodes;
 };
 
-const removeRepeatedNames = (bracket: BracketNode[][]) => {
+export const removeRepeatedNames = (bracket: BracketNode[][]) => {
     const seeds = new Set<number>();
     const newBracket: BracketNode[][] = [];
 
@@ -89,8 +89,8 @@ const removeRepeatedNames = (bracket: BracketNode[][]) => {
                 newMatchups.push("bye");
             } else {
                 const newMatchup: Matchup = {
-                    road: matchup.road in seeds ? -1 : matchup.road,
-                    home: matchup.home in seeds ? -1 : matchup.home,
+                    road: seeds.has(matchup.road) ? -1 : matchup.road,
+                    home: seeds.has(matchup.home) ? -1 : matchup.home,
                 };
 
                 seeds.add(matchup.road);
@@ -103,18 +103,4 @@ const removeRepeatedNames = (bracket: BracketNode[][]) => {
     }
 
     return newBracket;
-};
-
-// TODO: delete this
-export const run = () => {
-    const n = 6;
-
-    const rounds = calcRoundsIter(n);
-
-    const withByes = subByes(rounds, n);
-
-    console.log("Rounds are:");
-    for (const round of withByes) {
-        console.log(round);
-    }
 };
