@@ -93,10 +93,12 @@ const r1Matchups = computed(() => {
     return matchups;
 });
 
-console.log("seedArr is");
-console.log(seedArr.value);
+// console.log("seedArr is");
+// console.log(seedArr.value);
 
-console.log(r1Matchups.value);
+// console.log(r1Matchups.value);
+
+run();
 </script>
 
 <template>
