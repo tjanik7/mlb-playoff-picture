@@ -6,13 +6,15 @@ import { getBracket, removeRepeatedNames, toBracketNodes } from "./seeds.ts";
 import Bye from "./Bye.vue";
 
 const props = defineProps<{
-    numTeams: number;
+    teams: string[];
 }>();
 
-const getHeight = (colNumber: number) => 2 ** colNumber;
+const numTeams = computed(() => props.teams.length);
+
+const getHeight = (colIdx: number) => 2 ** (colIdx + 1);
 
 const cols = computed(() => {
-    const bracket = getBracket(props.numTeams);
+    const bracket = getBracket(numTeams.value);
 
     const sliced = bracket.slice(1);
     const reversed = sliced.reverse();
@@ -25,7 +27,7 @@ const offsets = computed(() => {
     const res = [0];
 
     for (let i = 1; i < cols.value.length + 1; i++) {
-        const prevHeight = getHeight(i);
+        const prevHeight = getHeight(i - 1);
         res.push(res[i - 1]! + Math.trunc(prevHeight / 2));
     }
 
@@ -41,13 +43,13 @@ const offsets = computed(() => {
                     <SingleBracket
                         :road-team="String(matchup.road)"
                         :home-team="String(matchup.home)"
-                        :height="getHeight(idx + 1)"
+                        :height="getHeight(idx)"
                         :bottom-offset="offsets[idx]"
                     />
                 </template>
 
                 <template v-else>
-                    <Bye :height="getHeight(idx + 1)" />
+                    <Bye :height="getHeight(idx)" />
                 </template>
             </template>
         </div>

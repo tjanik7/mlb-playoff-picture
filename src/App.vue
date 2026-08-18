@@ -1,9 +1,19 @@
 <script setup lang="ts">
 import SmartBracket from "./bracket/SmartBracket.vue";
+
+const genTeams = (n: number) => {
+    const teams = [];
+
+    for (let i = 0; i < n; i++) {
+        teams.push(String(i + 1));
+    }
+
+    return teams;
+};
 </script>
 
 <template>
-    <SmartBracket :num-teams="6" />
+    <SmartBracket :teams="genTeams(6)" />
 </template>
 
 <style scoped>
