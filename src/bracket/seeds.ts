@@ -78,24 +78,23 @@ const calcRoundsIter2 = (teams: string[]) => {
     // const rounds = [[1]]; // Prepopulate championship
     const rounds: BracketNode[][] = [[{ road: 2, home: 1 }]];
 
-    for (let r = 1; r <= numRounds; r++) {
+    for (let r = 1; r <= numRounds - 1; r++) {
         const prevRound = rounds.at(-1);
         const round: BracketNode[] = [];
 
         const seedSum = calcSeedSum(r + 1);
-        console.log(`seedSum for ${r} is ${seedSum}`);
 
         if (prevRound) {
             for (const matchup of prevRound) {
                 if (matchup !== "bye") {
                     round.push({
-                        road: seedSum - matchup.home,
-                        home: matchup.home,
+                        road: seedSum - matchup.road,
+                        home: matchup.road,
                     });
 
                     round.push({
-                        road: seedSum - matchup.road,
-                        home: matchup.road,
+                        road: seedSum - matchup.home,
+                        home: matchup.home,
                     });
                 } else {
                     console.error("found a bye");
