@@ -48,7 +48,7 @@ const shuffle = (arr: string[]) => {
 
 const getRandomTeams = (n: number) => shuffle(mlbTeams).slice(0, n);
 
-const t = getRandomTeams(10);
+const t = getRandomTeams(6);
 </script>
 
 <template>
