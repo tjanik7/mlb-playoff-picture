@@ -1,3 +1,10 @@
+interface Matchup {
+    road: number;
+    home: number;
+}
+type BracketNode = Matchup | "bye";
+type BracketColumn = BracketNode[];
+
 const calcNumRounds = (numTeams: number) =>
     Math.ceil(Math.log(numTeams) / Math.log(2));
 
@@ -41,21 +48,47 @@ const calcRoundsIter = (teams: string[]) => {
     return rounds;
 };
 
+const calcRoundsIter2 = (teams: string[]) => {
+    const numRounds = calcNumRounds(teams.length);
+    // const rounds = [[1]]; // Prepopulate championship
+    const rounds: BracketNode[][] = [[{ road: 2, home: 1 }]];
+
+    for (let r = 1; r <= numRounds; r++) {
+        const prevRound = rounds.at(-1);
+        const round: BracketNode[] = [];
+
+        const seedSum = calcSeedSum(r);
+
+        if (prevRound) {
+            for (const matchup of prevRound) {
+                if (matchup !== "bye") {
+                    const right = matchup.home;
+                    const left = seedSum - right;
+
+                    round.push({
+                        road: left,
+                        home: right,
+                    });
+                } else {
+                    console.error("found a bye");
+                }
+            }
+        }
+
+        rounds.push(round);
+    }
+
+    return rounds;
+};
+
 const getBracketOld = (teams: string[]) => {
     const b = calcRoundsIter(teams);
     const withByes = subByes(b, teams.length);
 
-    const sliced = withByes.slice(1);
-    return sliced.reverse();
+    // TODO: PICK BACK UP HERE TRANSITIONING TO ONLY USING NODES
+
+    return withByes.reverse();
 };
-
-interface Matchup {
-    road: number;
-    home: number;
-}
-
-type BracketNode = Matchup | "bye";
-type BracketColumn = BracketNode[];
 
 const toBracketNode = (
     roadSeed: number | "bye",
