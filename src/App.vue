@@ -1,20 +1,9 @@
 <script setup lang="ts">
 import SmartBracket from "./bracket/SmartBracket.vue";
 
-const t = [
-    "Cubs",
-    "Brewers",
-    "Dodgers",
-    "Mets",
-    "Cardinals",
-    "Padres",
-    "Reds",
-    "Rockies",
-    "Phillies",
-    "Marlins",
-    "Braves",
-    "Giants",
-];
+const t = ["Cubs", "Brewers", "Dodgers", "Mets", "red sox"];
+
+// TODO: keep fixing this
 </script>
 
 <template>

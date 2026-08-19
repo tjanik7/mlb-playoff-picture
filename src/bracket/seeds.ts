@@ -22,6 +22,31 @@ const subByes = (rounds: number[][], numTeams: number) => {
     return res;
 };
 
+const subByes2 = (
+    columns: BracketColumn[],
+    numTeams: number,
+): BracketNode[][] => {
+    const res = [];
+
+    for (const col of columns) {
+        const newCol = col.map((matchup) => {
+            if (
+                matchup === "bye" ||
+                matchup.road > numTeams ||
+                matchup.home > numTeams
+            ) {
+                return "bye";
+            }
+
+            return matchup;
+        });
+
+        res.push(newCol);
+    }
+
+    return res;
+};
+
 const calcRoundsIter = (teams: string[]) => {
     const numRounds = calcNumRounds(teams.length);
     const rounds = [[1]]; // Prepopulate championship
@@ -57,17 +82,20 @@ const calcRoundsIter2 = (teams: string[]) => {
         const prevRound = rounds.at(-1);
         const round: BracketNode[] = [];
 
-        const seedSum = calcSeedSum(r);
+        const seedSum = calcSeedSum(r + 1);
+        console.log(`seedSum for ${r} is ${seedSum}`);
 
         if (prevRound) {
             for (const matchup of prevRound) {
                 if (matchup !== "bye") {
-                    const right = matchup.home;
-                    const left = seedSum - right;
+                    round.push({
+                        road: seedSum - matchup.home,
+                        home: matchup.home,
+                    });
 
                     round.push({
-                        road: left,
-                        home: right,
+                        road: seedSum - matchup.road,
+                        home: matchup.road,
                     });
                 } else {
                     console.error("found a bye");
@@ -85,7 +113,14 @@ const getBracketOld = (teams: string[]) => {
     const b = calcRoundsIter(teams);
     const withByes = subByes(b, teams.length);
 
-    // TODO: PICK BACK UP HERE TRANSITIONING TO ONLY USING NODES
+    return withByes.reverse();
+};
+
+const getBracketNew = (teams: string[]) => {
+    const b = calcRoundsIter2(teams);
+    console.log(b);
+
+    const withByes = subByes2(b, teams.length);
 
     return withByes.reverse();
 };
@@ -151,8 +186,9 @@ const removeRepeatedNames = (bracket: BracketNode[][]) => {
 };
 
 export const getBracket = (teams: string[]): BracketColumn[] => {
-    const bracket = getBracketOld(teams);
+    const bracket = getBracketNew(teams);
 
-    const nodes = bracket.map((col) => toBracketNodes(col));
-    return removeRepeatedNames(nodes);
+    console.log(bracket);
+
+    return removeRepeatedNames(bracket);
 };
