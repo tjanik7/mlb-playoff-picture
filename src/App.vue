@@ -15,7 +15,7 @@ interface DivisionStandings {
 
 const teams = ref<Team[]>([]);
 
-const markDivLeaders = () => {
+const markDivLeaders = (teamArr: Team[]) => {
     const addTeamToDiv = (team: Team) => {
         const divId = team.division.id;
 
@@ -31,7 +31,7 @@ const markDivLeaders = () => {
 
     const standings: DivisionStandings = {};
 
-    for (const team of teams.value) {
+    for (const team of teamArr) {
         addTeamToDiv(team);
     }
 
@@ -51,11 +51,13 @@ const markDivLeaders = () => {
             }
         }
     }
+
+    return teamArr;
 };
 
 const loadData = async () => {
-    teams.value = await fetchStandingsData();
-    markDivLeaders();
+    const teamArr = await fetchStandingsData();
+    teams.value = markDivLeaders(teamArr);
 };
 
 loadData();

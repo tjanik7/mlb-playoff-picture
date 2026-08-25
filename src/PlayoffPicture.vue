@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import { League, teamCompare, type Team } from "./team/team";
-import Bracket from "./Bracket.vue";
+import SmartBracket from "./bracket/SmartBracket.vue";
 
 const { teams } = defineProps<{
     teams: Team[];
@@ -37,14 +37,37 @@ const nlPlayoffPicture = computed(() => [
     ...nlDivLeaders.value,
     ...nlWcStandings.value,
 ]);
+
+const alPlayoffBracket = computed(() => {
+    const sliced = alPlayoffPicture.value.slice(0, 6);
+    return sliced.map((t) => t.name);
+});
+
+const nlPlayoffBracket = computed(() => {
+    const sliced = nlPlayoffPicture.value.slice(0, 6);
+    return sliced.map((t) => t.name);
+});
 </script>
 
 <template>
     <h2>Playoff Picture</h2>
 
     <h2>American League Playoff Picture</h2>
-    <Bracket :teams="alPlayoffPicture" />
+    <SmartBracket :teams="alPlayoffBracket" />
 
     <h2>National League Playoff Picture</h2>
-    <Bracket :teams="nlPlayoffPicture" />
+    <SmartBracket :teams="nlPlayoffBracket" />
 </template>
+
+<style lang="css" scoped>
+/* TODO: figure out why this isn't actually scoped */
+.flex-row {
+    display: flex;
+}
+
+.flex-col {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+}
+</style>
