@@ -63,7 +63,10 @@ const selectedView = ref(ViewChoices.PlayoffPicture);
         :teams="teams"
     />
 
-    <WildCardStandings v-if="selectedView === ViewChoices.WcStandings" :teams />
+    <WildCardStandings
+        v-if="selectedView === ViewChoices.WcStandings"
+        :teams="teams"
+    />
 </template>
 
 <style scoped></style>
