@@ -1,15 +1,61 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { fetchStandingsData } from "./apiClient";
-import { type Team } from "./team/team";
+import { teamCompare, type Division, type Team } from "./team/team";
 import PlayoffPicture from "./PlayoffPicture.vue";
 import WildCardStandings from "./WildCardStandings.vue";
 import DivisionStandings from "./DivisionStandings.vue";
 
+interface DivisionStandings {
+    [key: number]: {
+        division: Division;
+        teams: Team[];
+    };
+}
+
 const teams = ref<Team[]>([]);
+
+const markDivLeaders = () => {
+    const addTeamToDiv = (team: Team) => {
+        const divId = team.division.id;
+
+        if (divId in standings) {
+            standings[divId]?.teams.push(team);
+        } else {
+            standings[divId] = {
+                division: team.division,
+                teams: [team],
+            };
+        }
+    };
+
+    const standings: DivisionStandings = {};
+
+    for (const team of teams.value) {
+        addTeamToDiv(team);
+    }
+
+    // Sort divisions by win pct
+
+    for (let key in standings) {
+        const div = standings[key];
+
+        if (div) {
+            div.teams.sort(teamCompare);
+
+            // Mark division leaders
+            const divLeader = div.teams[0];
+
+            if (divLeader) {
+                divLeader.isDivisionLeader = true;
+            }
+        }
+    }
+};
 
 const loadData = async () => {
     teams.value = await fetchStandingsData();
+    markDivLeaders();
 };
 
 loadData();
